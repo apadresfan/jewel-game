@@ -324,7 +324,7 @@ window.eur00t.jewels.Game.prototype._compactizeBoard = ->
         j: j
       iterator += 1
     
-    # add new elements in necessary
+    # add new elements if necessary
     if (@boardH - 1 - newMatrix[j].length) >= 0
       iterator = 1
       for i in [@boardH - 1 - newMatrix[j].length..0]
