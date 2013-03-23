@@ -33,6 +33,12 @@ eur00t.templates.jewels.scores = """
   border: border for each gem
 ###
 eur00t.templates.jewels.item = """
+  <div class="jewel <%=color %>" style="width: <%=size %>px; height: <%=size %>px; <%=window.eur00t._prefix%>transform: translate(<%=gap+j*(size+2*gap)-border %>px, <%=gap+i*(size+2*gap)-border %>px);">
+  </div>
+"""
+
+# Fallback for old browsers
+eur00t.templates.jewels._item = """
   <div class="jewel <%=color %>" style="width: <%=size %>px; height: <%=size %>px; left: <%=gap+j*(size+2*gap)-border %>px; top: <%=gap+i*(size+2*gap)-border %>px;">
   </div>
 """

@@ -8,6 +8,27 @@ if (window.eur00t.jewels == null) {
 }
 
 /*
+  Find browser-specific css prefix
+*/
+
+
+window.eur00t._prefix = (function() {
+  if (document.body.style.transform !== void 0) {
+    return '';
+  } else if (document.body.style.webkitTransform !== void 0) {
+    return '-webkit-';
+  } else if (document.body.style.mozTransform !== void 0) {
+    return '-moz-';
+  } else if (document.body.style.msTransform !== void 0) {
+    return '-ms-';
+  } else if (document.body.style.oTransform !== void 0) {
+    return '-o-';
+  } else {
+    return null;
+  }
+})();
+
+/*
   Get random integer function.
   If supplied 2 arguments: result is in range [from, to]
   If 1 argument: [0, from]
@@ -78,6 +99,9 @@ window.eur00t.jewels.Game = function(jQueryContainer, boardW, boardH, size, gap,
   }
   if (border == null) {
     border = 2;
+  }
+  if (window.eur00t._prefix === null) {
+    eur00t.templates.jewels.item = eur00t.templates.jewels._item;
   }
   this.jQueryContainer = jQueryContainer;
   this.board = this._generateGameBoard(eur00t.compiledTemplates.jewels.board, boardW, boardH, size, gap);
@@ -190,10 +214,14 @@ window.eur00t.jewels.Game.prototype._selectItem = function(i, j) {
 
 window.eur00t.jewels.Game.prototype._setPosition = function(elem, i, j) {
   if (elem !== null) {
-    elem.css({
-      left: this.gap + j * (this.size + 2 * this.gap) - this.border,
-      top: this.gap + i * (this.size + 2 * this.gap) - this.border
-    });
+    if (window.eur00t._prefix != null) {
+      elem.css("" + window.eur00t._prefix + "transform", "translate(" + (this.gap + j * (this.size + 2 * this.gap) - this.border) + "px, " + (this.gap + i * (this.size + 2 * this.gap) - this.border) + "px)");
+    } else {
+      elem.css({
+        left: this.gap + j * (this.size + 2 * this.gap) - this.border,
+        top: this.gap + i * (this.size + 2 * this.gap) - this.border
+      });
+    }
     return elem.data({
       i: i,
       j: j

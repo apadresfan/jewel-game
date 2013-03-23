@@ -2,6 +2,18 @@ window.eur00t = {} unless window.eur00t?
 window.eur00t.jewels = {} unless window.eur00t.jewels?
 
 ###
+  Find browser-specific css prefix
+###
+
+window.eur00t._prefix = do () ->
+  if document.body.style.transform isnt undefined then ''
+  else if document.body.style.webkitTransform isnt undefined then '-webkit-'
+  else if document.body.style.mozTransform isnt undefined then '-moz-'
+  else if document.body.style.msTransform isnt undefined then '-ms-'
+  else if document.body.style.oTransform isnt undefined then '-o-'
+  else null
+
+###
   Get random integer function.
   If supplied 2 arguments: result is in range [from, to]
   If 1 argument: [0, from]
@@ -42,7 +54,10 @@ window.eur00t.jewels.SPEED = 300
     window.game = new eur00t.jewel.Game null, 21, 10
 ###
 window.eur00t.jewels.Game = (jQueryContainer = $(document.body), boardW = 8, boardH = 8, size=60, gap=2, border=2) ->
-  @jQueryContainer = jQueryContainer;
+  # Select appropriate template
+  if window.eur00t._prefix is null then eur00t.templates.jewels.item = eur00t.templates.jewels._item
+
+  @jQueryContainer = jQueryContainer
   
   @board = @_generateGameBoard eur00t.compiledTemplates.jewels.board, boardW, boardH, size, gap
   
@@ -151,9 +166,13 @@ window.eur00t.jewels.Game.prototype._selectItem = (i, j) ->
 # Set position of elem to (i, j)
 window.eur00t.jewels.Game.prototype._setPosition = (elem, i, j) ->
   if elem != null
-    elem.css
-      left: @gap + j * (@size + 2 * @gap) - @border
-      top: @gap + i * (@size + 2 * @gap) - @border
+    if window.eur00t._prefix?
+      elem.css "#{window.eur00t._prefix}transform", "translate(#{@gap + j * (@size + 2 * @gap) - @border}px, #{@gap + i * (@size + 2 * @gap) - @border}px)"
+
+    else
+      elem.css
+        left: @gap + j * (@size + 2 * @gap) - @border
+        top: @gap + i * (@size + 2 * @gap) - @border
     
     elem.data
       i: i
